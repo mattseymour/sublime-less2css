@@ -134,10 +134,13 @@ class Compiler:
         # if you've set the main_file (relative to current file), only that file
         # gets compiled this allows you to have one file with lots of @imports
         if self.settings['main_file']:
-            self.file_name = os.path.join(
-                os.path.dirname(self.file_name),
-                self.settings['main_file']
-            )
+            if not os.path.isabs(self.settings['main_file']):
+                self.file_name = os.path.abspath(
+                    os.path.join(
+                        dirs['project'],
+                        self.settings['main_file']
+                    )
+                )
 
         # compile the LESS file
         return self.convertLess2Css(
